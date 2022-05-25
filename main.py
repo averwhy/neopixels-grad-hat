@@ -42,18 +42,64 @@ def rainbow_cycle(wait):
         pixels.show()
         time.sleep(wait)
 
-def color_shift(delay: float = 0.1):
+def color_shift(colors: list = [], delay: float = 0.05):
     colors = [Color.red(), Color.green(), Color.blue()]
     for c in colors:
         for i in range(num_pixels):
             time.sleep(delay)
             pixels[i] = c
+            pixels.show()
 
+def alternate(clr: tuple, delay: float = 0.3):
+    for i in range(num_pixels):
+        if i % 2 != 0: # odd
+            pixels[i] = clr
+        else:
+            pixels[i] = Color.none()
+    pixels.show()
+    time.sleep(delay)
+    for i in range(num_pixels):
+        if i % 2 == 0: # even
+            pixels[i] = clr
+        else:
+            pixels[i] = Color.none()
+    pixels.show()
+    time.sleep(delay)
+
+def dash(clr: tuple, length: int = 1, delay: float = 0.03):
+    for i in range(num_pixels):
+        pixels[i] = clr
+        if i - length >= 0:
+            pixels[i - length] = Color.none()
+        pixels.show()
+        time.sleep(delay)
+    remainders = range(num_pixels - length, num_pixels)
+    for i in remainders:
+        pixels[i] = Color.none()
+        pixels.show()
+        time.sleep(delay)
+
+def gradual_fill(clr: tuple, empty_after: bool = True, reverse_empty: bool = False, delay: float = 0.05):
+    for i in range(num_pixels):
+        pixels[i] = clr
+        pixels.show()
+        time.sleep(delay)
+    if empty_after:
+        if reverse_empty:
+            for i in range(num_pixels):
+                pixels[-i] = Color.none()
+                pixels.show()
+                time.sleep(delay)
+        else:
+            for i in range(num_pixels):
+                pixels[i] = Color.none()
+                pixels.show()
+                time.sleep(delay)
 
 try:
     while ACTIVE:
-        color_shift()
-        time.sleep(0.1 * 60.0)
+        gradual_fill(Color.cyan())
+
 except KeyboardInterrupt:
     pixels.fill((0,0,0))
     pixels.show()
