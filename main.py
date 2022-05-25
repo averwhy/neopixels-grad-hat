@@ -50,6 +50,10 @@ def color_shift(delay: float = 0.1):
             pixels[i] = c
 
 
-while ACTIVE:
-    color_shift()
-    time.sleep(0.1 * 60.0)
+try:
+    while ACTIVE:
+        color_shift()
+        time.sleep(0.1 * 60.0)
+except KeyboardInterrupt:
+    pixels.fill((0,0,0))
+    pixels.show()
