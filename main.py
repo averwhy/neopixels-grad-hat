@@ -1,6 +1,7 @@
 import time
 import board
 import neopixel
+import typing
 from colors import Color
 
 pixel_pin = board.D18
@@ -33,7 +34,6 @@ def wheel(pos):
         b = int(255 - pos * 3)
     return (r, g, b) if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
 
-
 def rainbow_cycle(wait):
     for j in range(255):
         for i in range(num_pixels):
@@ -43,26 +43,33 @@ def rainbow_cycle(wait):
         time.sleep(wait)
 
 def color_shift(colors: list = [], delay: float = 0.05):
-    colors = [Color.red(), Color.green(), Color.blue()]
+    if len(colors) == 0:
+        colors = [Color.red(), Color.green(), Color.blue()]
     for c in colors:
         for i in range(num_pixels):
             time.sleep(delay)
             pixels[i] = c
             pixels.show()
 
-def alternate(clr: tuple, delay: float = 0.3):
+def alternate(clr: typing.Union[tuple, typing.List[tuple]], delay: float = 0.3):
+    if isinstance(clr, list):
+        color_1 = clr[0]
+        color_2 = clr[1]
+    else:
+        color_1 = clr
+        color_2 = Color.none()
     for i in range(num_pixels):
         if i % 2 != 0: # odd
-            pixels[i] = clr
+            pixels[i] = color_1
         else:
-            pixels[i] = Color.none()
+            pixels[i] = color_2
     pixels.show()
     time.sleep(delay)
     for i in range(num_pixels):
         if i % 2 == 0: # even
-            pixels[i] = clr
+            pixels[i] = color_1
         else:
-            pixels[i] = Color.none()
+            pixels[i] = color_2
     pixels.show()
     time.sleep(delay)
 
@@ -96,10 +103,39 @@ def gradual_fill(clr: tuple, empty_after: bool = True, reverse_empty: bool = Fal
                 pixels.show()
                 time.sleep(delay)
 
+def strobe(clr: tuple, rate: float = 0.05):
+    pixels.fill(clr)
+    pixels.show()
+    time.sleep(rate)
+    pixels.fill(Color.none())
+    pixels.show()
+    time.sleep(rate)
+
+def meet(clr1: tuple, clr2: tuple = None, reverse: bool = False, delay: float = 0.05):
+    if clr2 is None:
+        clr2 = clr1
+    for i in range(int(num_pixels / 2) + 1):
+        pixels[i] = clr1
+        pixels[-i] = clr2
+        pixels.show()
+        time.sleep(delay)
+    if not reverse:
+        for i in range(int(num_pixels / 2) + 1):
+            pixels[i] = Color.none()
+            pixels[-i] = Color.none()
+            pixels.show()
+            time.sleep(delay)
+    else:
+        for i in range(int(num_pixels / 2) + 1, 0, -1):
+            pixels[i] = Color.none()
+            pixels[-i] = Color.none()
+            pixels.show()
+            time.sleep(delay)
+
+
 try:
     while ACTIVE:
-        gradual_fill(Color.cyan())
-
+        meet(Color.blue(), reverse=True)
 except KeyboardInterrupt:
     pixels.fill((0,0,0))
     pixels.show()
