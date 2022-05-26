@@ -132,10 +132,64 @@ def meet(clr1: tuple, clr2: tuple = None, reverse: bool = False, delay: float = 
             pixels.show()
             time.sleep(delay)
 
+def breathe(clr: tuple, speed: float = 1): # Does not work well with rgb values with low numbers
+    # TODO: Rewrite this to subtract percentages of original numbers
+    delta = speed / 510
+    original_clr = clr
+    for i in range(255):
+        pixels.fill(clr)
+        pixels.show()
+        clr = (clr[0] - 1 if clr[0] - 1 >= 0 else 0,
+        clr[1] - 1 if clr[1] - 1 >= 0 else 0,
+        clr[2] - 1 if clr[2] - 1 >= 0 else 0
+        )
+        time.sleep(delta)
+    time.sleep(delta * 75) # it'll be off for a little bit before gradually turning back on
+    for i in range(255):
+        pixels.fill(clr)
+        pixels.show()
+        clr = (clr[0] + 1 if clr[0] + 1 <= original_clr[0] else original_clr[0],
+        clr[1] + 1 if clr[1] + 1 <= original_clr[1] else original_clr[1],
+        clr[2] + 1 if clr[2] + 1 <= original_clr[2] else original_clr[2]
+        )
+        time.sleep(delta)
 
+def quad_alternate(clr: tuple, clr2: tuple = None, delay: float = 0.5):
+    zone = int(num_pixels / 4)
+    z1 = range(0, zone)
+    z2 = range(zone, (zone*2))
+    z3 = range(zone*2, (zone*3))
+    z4 = range(zone*3, num_pixels)
+    if clr2 is None: clr2 = Color.none()
+    for i in range(num_pixels):
+        #z1 and z3 = clr1
+        if i in z1 or i in z3:
+            pixels[i] = clr
+        #z2 and z4 = clr2
+        else:
+            pixels[i] = clr2
+    pixels.show()
+    time.sleep(delay)
+    for i in range(num_pixels):
+        #z2 and z4 = clr1
+        if i in z2 or i in z4:
+            pixels[i] = clr
+        #z1 and z3 = clr2
+        else:
+            pixels[i] = clr2
+    pixels.show()
+    time.sleep(delay)
+
+def all_random(delay=0.1):
+    for i in range(num_pixels):
+        pixels[i] = Color.random()
+    pixels.show()
+    time.sleep(delay)
+
+# Main loop
 try:
     while ACTIVE:
-        meet(Color.blue(), reverse=True)
+        all_random()
 except KeyboardInterrupt:
     pixels.fill((0,0,0))
     pixels.show()
