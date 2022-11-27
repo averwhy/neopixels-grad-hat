@@ -49,6 +49,7 @@ class rainbow_cycle:
             time.sleep(rate)
     @staticmethod
     def styles():
+<<<<<<< HEAD
         return ((0.001,),
         (0.0,),
         (0.1,),
@@ -161,15 +162,138 @@ class strobe:
         pixels.fill(Color.none())
         pixels.show()
         time.sleep(rate)
+=======
+        return (0.001, 0.0, 0.1)
+
+class stop:
+    def __init__(self):
+        pixels.fill(Color.none())
+        pixels.show()
+    @staticmethod
+    def styles():
+        return (None,)
+
+class color_shift:
+    def __init__(self, rate: float = 0.05, colors: list = []):
+        if len(colors) == 0:
+            colors = [Color.red(), Color.green(), Color.blue()]
+        for c in colors:
+            for i in range(num_pixels):
+                time.sleep(rate)
+                pixels[i] = c
+                pixels.show()
+    @staticmethod
+    def styles():
+        return (0.05, 0.01, 0.005, 0.001, 0.1)
+
+class alternate:
+    def __init__(self, clr: typing.Union[tuple, typing.List[tuple]], delay: float = 0.3):
+        if isinstance(clr, list):
+            color_1 = clr[0]
+            color_2 = clr[1]
+        else:
+            color_1 = clr
+            color_2 = Color.none()
+        for i in range(num_pixels):
+            if i % 2 != 0: # odd
+                pixels[i] = color_1
+            else:
+                pixels[i] = color_2
+        pixels.show()
+        time.sleep(delay)
+        for i in range(num_pixels):
+            if i % 2 == 0: # even
+                pixels[i] = color_1
+            else:
+                pixels[i] = color_2
+        pixels.show()
+        time.sleep(delay)
+>>>>>>> 72b93d19ad8520d7a2d75bb3eb3f134cd69ae98f
     @staticmethod
     def styles():
         style_list = []
         for c in Color.get_all():
+<<<<<<< HEAD
             style_list.append((c(),))
             style_list.append((c(), 0.01))
             style_list.append((c(), 0.5))
         return style_list
 
+=======
+            style_list.append((c, 0.3)) # add color with rate of 0.05
+            style_list.append((c, 0.1)) # add same color with faster rate
+            style_list.append((c, 0.6)) # add same color with slow rate
+        return style_list
+
+class dash:
+    def __init__(self, clr: tuple, length: int = 1, delay: float = 0.03):
+        for i in range(num_pixels):
+            pixels[i] = clr
+            if i - length >= 0:
+                pixels[i - length] = Color.none()
+            pixels.show()
+            time.sleep(delay)
+        remainders = range(num_pixels - length, num_pixels)
+        for i in remainders:
+            pixels[i] = Color.none()
+            pixels.show()
+            time.sleep(delay)
+    @staticmethod
+    def styles():
+        style_list = []
+        for c in Color.get_all():
+            style_list.append((c, 3))
+            style_list.append((c, 6))
+            style_list.append((c, 9))
+        return style_list
+
+class gradual_fill:
+    def __init__(self, clr: tuple, empty_after: bool = True, reverse_empty: bool = False, delay: float = 0.05):
+        for i in range(num_pixels):
+            pixels[i] = clr
+            pixels.show()
+            time.sleep(delay)
+        if empty_after:
+            if reverse_empty:
+                for i in range(num_pixels):
+                    pixels[-i] = Color.none()
+                    pixels.show()
+                    time.sleep(delay)
+            else:
+                for i in range(num_pixels):
+                    pixels[i] = Color.none()
+                    pixels.show()
+                    time.sleep(delay)
+    @staticmethod
+    def styles():
+        style_list = []
+        for c in Color.get_all():
+            style_list.append((c, True, False))
+            style_list.append((c, True, True))
+            style_list.append((c, True, False, 0.01))
+            style_list.append((c, True, True, 0.01))
+            style_list.append((c, True, False, 0.5))
+            style_list.append((c, True, True, 0.5))
+        return style_list
+
+class strobe:
+    def __init__(self, clr: tuple, rate: float = 0.05):
+        pixels.fill(clr)
+        pixels.show()
+        time.sleep(rate)
+        pixels.fill(Color.none())
+        pixels.show()
+        time.sleep(rate)
+    @staticmethod
+    def styles():
+        style_list = []
+        for c in Color.get_all():
+            style_list.append((c))
+            style_list.append((c, 0.01))
+            style_list.append((c, 0.5))
+        return style_list
+
+>>>>>>> 72b93d19ad8520d7a2d75bb3eb3f134cd69ae98f
 class meet:
     def __init__(self, clr1: tuple, clr2: tuple = None, reverse: bool = False, delay: float = 0.05):
         if clr2 is None:
@@ -195,12 +319,21 @@ class meet:
     def styles():
         style_list = []
         for c in Color.get_all():
+<<<<<<< HEAD
             style_list.append((c(), None, False))
             style_list.append((c(), None, True))
             style_list.append((c(), None, False, 0.01))
             style_list.append((c(), None, True, 0.01))
             style_list.append((c(), None, False, 0.5))
             style_list.append((c(), None, True, 0.5))
+=======
+            style_list.append((c, None, False))
+            style_list.append((c, None, True))
+            style_list.append((c, None, False, 0.01))
+            style_list.append((c, None, True, 0.01))
+            style_list.append((c, None, False, 0.5))
+            style_list.append((c, None, True, 0.5))
+>>>>>>> 72b93d19ad8520d7a2d75bb3eb3f134cd69ae98f
         return style_list
 
 class breathe:
@@ -229,9 +362,15 @@ class breathe:
     def styles():
         style_list = []
         for c in Color.get_all():
+<<<<<<< HEAD
             style_list.append((c(),))
             style_list.append((c(), 2))
             style_list.append((c(), 4))
+=======
+            style_list.append((c))
+            style_list.append((c, 2))
+            style_list.append((c, 4))
+>>>>>>> 72b93d19ad8520d7a2d75bb3eb3f134cd69ae98f
         return style_list
 
 class quad_alternate:
@@ -264,9 +403,15 @@ class quad_alternate:
     def styles():
         style_list = []
         for c in Color.get_all():
+<<<<<<< HEAD
             style_list.append((c(), None))
             style_list.append((c(), None, 0.1))
             style_list.append((c(), None, 0.8))
+=======
+            style_list.append((c, None))
+            style_list.append((c, None, 0.1))
+            style_list.append((c, None, 0.8))
+>>>>>>> 72b93d19ad8520d7a2d75bb3eb3f134cd69ae98f
         return style_list
 
 class all_random:
@@ -277,6 +422,7 @@ class all_random:
         time.sleep(delay)
     @staticmethod
     def styles():
+<<<<<<< HEAD
         return ((0.1,), (0.5,), (0.05,))
 
 class stop:
@@ -286,6 +432,9 @@ class stop:
     @staticmethod
     def styles():
         return((None,),)
+=======
+        return ([0.1, 0.5, 0.05])
+>>>>>>> 72b93d19ad8520d7a2d75bb3eb3f134cd69ae98f
     
 
 MODE_DICT = {0: rainbow_cycle, 1: color_shift, 2: alternate, 3: quad_alternate, 4: dash, 5: gradual_fill,
@@ -320,7 +469,11 @@ def _right_click():
 mouse.on_click(_left_click)
 mouse.on_right_click(_right_click)
 
+<<<<<<< HEAD
 def run_mode(func, args):
+=======
+def run_mode(func, *args):
+>>>>>>> 72b93d19ad8520d7a2d75bb3eb3f134cd69ae98f
     while ACTIVE:
         func(*args)
 
@@ -336,13 +489,24 @@ try:
             ACTIVE_MODE.start() # start that process
             LAST_MODE = CURRENT_MODE
             LAST_STYLE = CURRENT_STYLE
+<<<<<<< HEAD
             print("Reloaded process")
+=======
+            print("set")
+>>>>>>> 72b93d19ad8520d7a2d75bb3eb3f134cd69ae98f
         if LAST_MODE != CURRENT_MODE or LAST_STYLE != CURRENT_STYLE: # if changes, this runs
             ACTIVE_MODE.terminate() # stop process
             ACTIVE_MODE = None # set to None so that the above if statement runs
             stop() # turn all lights off
+<<<<<<< HEAD
 except KeyboardInterrupt:
     ACTIVE_MODE.terminate()
     stop()
 ACTIVE_MODE.terminate()
 stop()
+=======
+            print("reset")
+except KeyboardInterrupt:
+    ACTIVE_MODE.terminate()
+    stop()
+>>>>>>> 72b93d19ad8520d7a2d75bb3eb3f134cd69ae98f
