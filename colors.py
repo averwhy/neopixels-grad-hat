@@ -4,6 +4,14 @@ class Color:
     """Simple staticmethods to make colors easier"""
 
     @staticmethod
+    def get_all() -> tuple:
+        strings = [method for method in dir(Color) if method.startswith('__') is False and method.strip() not in ('none', 'get_all')]
+        methods = []
+        for s in strings:
+            methods.append(getattr(Color, s))
+        return methods
+
+    @staticmethod
     def random() -> tuple:
         return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
     
